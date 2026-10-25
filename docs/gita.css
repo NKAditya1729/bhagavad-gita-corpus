@@ -1,0 +1,136 @@
+/* Design of the Vedāntic Archive's Maitreyī and Madhu pages (after Advaita Sharada). */
+@font-face{font-family:'Tiro Devanagari Sanskrit';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/TiroDevanagariSanskrit-Regular.ttf) format('truetype')}
+@font-face{font-family:'Gentium Book Plus';font-style:normal;font-weight:400;font-display:swap;src:url(assets/fonts/gentium-book-plus-400-latin.woff2) format('woff2')}
+:root{--bg:#faf7f2;--paper:#fff;--side:#f3eae5;--ink:#2b2118;--muted:#6b5d4f;--line:#e4dcd0;--accent:#7a1f1f;--tint:#f3e6e0;
+  --mula-bg:#f6ece7;--saffron:#b54510;--teal:#009688;--blue:#26408b;--font-size:20px;--header-height:54px;--shadow:0 15px 45px #2b211821}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+body{margin:0;color:var(--ink);background:var(--bg);font:400 16px/2.05 'Tiro Devanagari Sanskrit','Noto Serif Devanagari','Kohinoor Devanagari',serif;overflow-wrap:break-word}
+body[data-script=iast]{font-family:'Gentium Book Plus',Georgia,serif}
+body[data-script=kannada]{font-family:'Noto Serif Kannada','Kannada MN','Kannada Sangam MN',serif}
+body[data-script=telugu]{font-family:'Noto Serif Telugu','Telugu MN','Telugu Sangam MN',serif}
+body[data-script=tamil]{font-family:'Noto Serif Tamil','Tamil MN','Tamil Sangam MN',serif}
+body[data-script=malayalam]{font-family:'Noto Serif Malayalam','Malayalam MN','Malayalam Sangam MN',serif}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+[hidden]{display:none!important}
+.skip{position:fixed;top:-80px;left:16px;padding:8px 14px;background:var(--paper);border:1px solid var(--line);z-index:100}
+.skip:focus{top:6px}
+
+/* top bar */
+.topbar{position:sticky;top:0;height:var(--header-height);z-index:40;border-bottom:1px solid var(--line);background:var(--paper)}
+.topbar-inner{height:100%;padding:0 20px;display:flex;align-items:center;gap:12px}
+.icon{min-width:32px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:5px;line-height:1;font-size:15px;padding:0 4px}
+.icon:hover{background:var(--tint)}
+.menu-button{display:none;font-size:19px;color:var(--accent)}
+.archive-back{font-size:15px;white-space:nowrap}
+.page-name{font-size:15px;color:var(--muted);white-space:nowrap}
+.tools{display:flex;align-items:center;gap:4px;margin-left:auto;flex-shrink:0}
+.tools .icon{border:1px solid var(--line)}
+.tools #script{height:34px;width:106px;font-size:14px;padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--paper)}
+.reader-toggle{height:34px;border:1px solid var(--line);border-radius:5px;padding:2px 10px;white-space:nowrap;color:var(--muted);font-size:15px}
+.reader-toggle[aria-pressed=true]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);max-width:1152px;min-height:calc(100vh - var(--header-height));margin:0 auto}
+body.parshve .layout{max-width:1500px}
+.sidebar{min-width:0;background:var(--side);border-right:1px solid var(--line)}
+.side-inner{position:sticky;top:var(--header-height);height:calc(100dvh - var(--header-height));overflow:auto;padding:24px 18px 28px;scrollbar-width:thin}
+.side-title{margin:0 0 10px;font-size:15px;color:var(--muted)}
+.chapter-pick{display:flex;flex-direction:column;gap:2px;margin-bottom:14px;font-size:13px;color:var(--muted)}
+.chapter-pick select{width:100%;font-size:15px;padding:5px 6px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink)}
+.lesson-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.lesson-link{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:3px 2px;border:1px solid var(--line);border-radius:50%;color:var(--muted);font-size:14px;line-height:1.4}
+.lesson-link:hover{background:var(--tint);text-decoration:none}
+.lesson-link.active{background:var(--tint);color:var(--accent);border-color:var(--accent)}
+.lesson-link.source-intro{grid-column:1/-1;justify-content:flex-start;border-radius:5px;padding:4px 10px;margin-bottom:4px}
+.side-credits{margin-top:22px;font-size:12.5px;line-height:1.75;color:var(--muted)}
+.side-credits p{margin:0 0 9px}
+.muted{color:var(--muted)}
+main{min-width:0;width:100%;max-width:48rem;padding:0 2rem 4rem}
+body.parshve main{max-width:none}
+
+/* commentary chips (Advaita Sharada's व्याख्याः bar) */
+.vy-chips{position:sticky;top:var(--header-height);z-index:4;display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 0 8px;margin-bottom:18px;border-bottom:1px solid var(--line);background:var(--bg)}
+.chip-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px}
+.chip-row>span{font-size:16px;color:var(--muted)}
+.chip-row button{border:1px solid var(--line);border-radius:999px;color:var(--teal);font-size:15.5px;padding:3px 13px 1px;line-height:1.7}
+.chip-row button[aria-pressed=true]{background:var(--teal);color:var(--bg);border-color:var(--teal)}
+.chip-row button.bh-chip{color:var(--accent)}
+.chip-row button.bh-chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.chip-row .parshve{margin-left:8px;border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-weight:bold;padding:3px 14px 1px}
+.chip-row .parshve[aria-pressed=true]{background:var(--accent);color:var(--bg)}
+
+/* reading */
+.chapter-heading{text-align:center;color:var(--accent);font-size:24px;margin:6px 0 2px;font-weight:400}
+.chapter-sub{text-align:center;color:var(--muted);font-size:15px;margin:0 0 14px}
+.mula-box{margin:13px 0 18px;padding:18px 26px;border-radius:8px;background:var(--paper);box-shadow:0 1px 0 var(--line);font-size:calc(var(--font-size)*1.12);line-height:2.1;font-weight:600;text-align:center;overflow-wrap:anywhere}
+.mula-box .uvaca{font-size:.82em;font-weight:400;color:var(--muted);margin:0}
+.mula-box p{margin:0}
+.mula-box .pada-lines{display:none}
+body.pada .mula-box .pada-lines{display:block}
+body.pada .mula-box .sandhi-lines{display:none}
+.verse-ref{display:block;text-align:right;font-size:13px;font-weight:400;color:var(--muted);margin-top:4px}
+.original{font-size:var(--font-size);line-height:2.05;text-align:justify;margin:.7em 0;overflow-wrap:break-word}
+.original.avatarika{color:#4a3a2c}
+.block-label{font-size:15px;color:var(--blue);font-weight:600;margin:14px 0 0}
+.bh-label{font-size:15px;color:var(--accent);margin:18px 0 -4px}
+.k-P{color:var(--blue);font-weight:600}
+.k-M{font-style:italic}
+.k-A{color:#5b4a3a}
+.k-R,.ref{font-size:.78em;color:var(--muted);white-space:nowrap}
+.empty-note{color:var(--muted);font-size:15px;font-style:italic}
+
+/* sandhi / pada: both forms are in the page; the toggle swaps them everywhere */
+.w>.pd{display:none}
+body.pada .w>.sj{display:none}
+body.pada .w>.pd{display:inline}
+body.pada .w.m>.pd{text-decoration:underline dotted #b9a99b;text-underline-offset:5px}
+.m-key{text-decoration:underline dotted #b9a99b;text-underline-offset:4px}
+
+/* ṭīkā blocks (inline under the text, or beside it) */
+.vy-block{margin:6px 0 18px 14px;padding-left:16px;border-left:3px solid var(--teal);font-size:calc(var(--font-size)*.92);line-height:2}
+.vy-block>summary{font-size:15px;font-weight:600;color:var(--blue);cursor:pointer;line-height:2}
+.vy-block .original{font-size:inherit;line-height:inherit}
+.pair>.right:empty{display:none}
+@media(min-width:901px){
+  body.parshve .pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 34px;align-items:start}
+  body.parshve .pair>.right:empty{display:block}
+  body.parshve .pair>.right .vy-block{margin-left:0}
+  body.parshve .pair+.pair{border-top:1px dashed var(--line);padding-top:6px}
+}
+.unit-pager{display:flex;justify-content:space-between;gap:12px;margin:28px 0 8px;padding-top:14px;border-top:1px solid var(--line);font-size:17px}
+.colophon{text-align:center;color:var(--muted);font-size:calc(var(--font-size)*.9);margin-top:26px}
+#status p{text-align:center;color:var(--muted)}
+
+/* narrow screens */
+@media(max-width:900px){
+  body{--header-height:86px}
+  .topbar-inner{flex-wrap:wrap;gap:3px 10px;padding:7px 12px;align-content:center}
+  .menu-button{display:inline-flex;min-width:28px;height:30px}
+  .archive-back,.page-name{font-size:13px}
+  .tools{width:100%;justify-content:flex-end;gap:3px;margin-left:0}
+  .tools>button,.tools select{font-size:12px!important;min-height:29px;height:29px!important}
+  .tools #script{width:96px}
+  .layout{display:block}
+  .sidebar{position:fixed;inset:var(--header-height) 25% 0 0;z-index:50;background:var(--paper);transform:translateX(-105%);box-shadow:0 0 24px #0003;transition:transform .18s}
+  .sidebar.open{transform:none}
+  .side-inner{height:100%;top:0}
+  .lesson-link{min-height:42px}
+  main{max-width:46rem;margin:auto;padding:0 18px 48px}
+  .mula-box{padding:16px 16px;font-size:calc(var(--font-size)*1.06)}
+  .original{text-align:left;line-height:2}
+  .chip-row button{font-size:14px;padding:2px 10px 0}
+  .chip-row>span{font-size:14px}
+}
+@media(max-width:480px){
+  .chip-row{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;width:100%;padding:0 4px}
+  .chip-row::-webkit-scrollbar{display:none}
+  .chip-row>*{flex:0 0 auto}
+  .vy-block{margin-left:4px;padding-left:10px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sidebar{transition:none}}
+@media print{.topbar,.sidebar,.vy-chips,.unit-pager{display:none!important}.layout{display:block}main{max-width:none;padding:0}.mula-box{box-shadow:none;background:none;border:1px solid #ccc}}
