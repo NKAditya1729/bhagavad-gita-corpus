@@ -62,7 +62,7 @@ def lane_paras(paras, pada):
             new = [run[0]]
             for it in run[1:]:
                 if isinstance(it, list):
-                    new.append(it)
+                    new.append(pada.pair(*it))
                 else:
                     for x in pada.items(it):
                         if isinstance(x, str) and isinstance(new[-1], str) and len(new) > 1:
@@ -131,6 +131,7 @@ def chapter(n, pada):
 
 def main():
     pada = Pada()
+    print("model readings:", dict(pada.how))
     OUT.mkdir(parents=True, exist_ok=True)
     index = []
     for n in range(1, 19):
