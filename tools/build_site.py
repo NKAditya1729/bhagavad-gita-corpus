@@ -129,13 +129,58 @@ def chapter(n, pada):
     return data, comm
 
 
+REVIEW = ROOT / "build/review.json"
+NAMES = ROOT / "build/review-names.json"
+
+
+def apply_review(data, comm, review, names):
+    """Apply tools/review.py: a machine pada that passed stays, a repaired one is replaced, a withdrawn one goes;
+    a proper name in Harsha's padapāṭha or the mūla is joined back into one word."""
+    def fix(paras):
+        for p in paras:
+            for run in p:
+                for i, it in enumerate(run[1:], 1):
+                    if not isinstance(it, list):
+                        continue
+                    key = it[0] + "\t" + it[1]
+                    if len(it) > 2 and key in review:
+                        verdict, new, _ = review[key]
+                        if new is None or verdict in ("withdrawn", "merged-whole"):
+                            run[i] = it[0]
+                        else:
+                            run[i] = [it[0], new, "m"]
+                    elif key in names["harsha"]:
+                        new = names["harsha"][key]
+                        run[i] = it[0] if new is None else [it[0], new]
+            # neighbouring plain strings merge again
+            for run in p:
+                k = 1
+                while k < len(run) - 1:
+                    if isinstance(run[k], str) and isinstance(run[k + 1], str):
+                        run[k] += run.pop(k + 1)
+                    else:
+                        k += 1
+    for v in data["verses"]:
+        fix(v["pre"])
+        fix(v["bh"])
+        v["pada"] = [names["mula"].get(line, line) for line in v["pada"]]
+    for c in comm.values():
+        for blocks in c.values():
+            for b in blocks:
+                fix(b["paras"])
+
+
 def main():
     pada = Pada()
+    review = json.loads(REVIEW.read_text(encoding="utf-8")) if REVIEW.exists() else {}
+    names = json.loads(NAMES.read_text(encoding="utf-8")) if NAMES.exists() else {"harsha": {}, "mula": {}}
     print("model readings:", dict(pada.how))
     OUT.mkdir(parents=True, exist_ok=True)
     index = []
     for n in range(1, 19):
         data, comm = chapter(n, pada)
+        if review:
+            apply_review(data, comm, review, names)
         (OUT / f"ch-{n:02d}.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         for side, c in comm.items():
             (OUT / f"ch-{n:02d}-{side}.json").write_text(json.dumps(c, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
