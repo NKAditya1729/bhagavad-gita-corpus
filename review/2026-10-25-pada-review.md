@@ -73,8 +73,40 @@ was split …आत्मा अगर्धः, which joins back correctly (6.1
 ("greed"). In a random hand-check of 90 accepted splits, about 2–3 were of this kind or came from OCR damage.
 Such cases need a reader; they are still marked with the dotted underline.
 
-Harsha's own splits (not changed here, apart from names) join back in 98.7% of occurrences. The rest show slips such as a
-missing ending (भेदम् → "भेद") or a member with its न् (आत्मन्-संयम-, against 8.2.7). These can be corrected the same way.
+## 6. Second pass: Harsha's own splits
+
+The same checks were then run on Harsha's padapāṭha (40,664 distinct splits, 147,864 occurrences; `tools/review_harsha.py`).
+Where his split joins back by the rules it was trusted, and only a clear structural fault was acted on (a lone अन्/अ,
+a one-letter piece); a single आ- member was left alone, since it is a member in its own right (2.1.13 आङ् मर्यादाभिविध्योः,
+2.2.18 कुगतिप्रादयः).
+
+| Outcome | Occurrences | What happened |
+|---|---:|---|
+| Correct | 145,611 (98.5%) | unchanged |
+| Ending restored | 1,647 + 26 | the pada stopped at the stem: द्वन्द्वशब्देन "द्वन्द्व-शब्द" → द्वन्द्व-शब्देन; प्रेतान् "प्रेत" → प्रेतान् |
+| Member in pada form | 76 | राजन्-विद्या → राज-विद्या (8.2.7); ऋच्-यजुस्-सामन्- → ऋक्-यजुस्-साम- (8.2.30, 8.2.7); षष्-मासाः → षट्-मासाः |
+| Broken piece joined | 301 | अन् अश्नतः → अनश्नतः, अ विद्यमानम् → अविद्यमानम् (6.3.73/74) |
+| Re-analysed (model + review) | 56 | e.g. छिन्नाभ्रमिव "छिन्नम् अभ्रम् इव" → छिन्न-अभ्रम् इव |
+| Harsha's emendation kept | 145 | his pada corrects a misprint: संन्सस्य → संन्यस्य, च्छन्दसाम् → छन्दसाम् (the च् belongs to the word before, 6.1.73) |
+
+Every changed split carries the dotted underline now, so it can be told from Harsha's own.
+
+**Corrected by hand** (all 76 emendations were read; 17 were Harsha's errors, not emendations) —
+[`harsha-corrections.tsv`](harsha-corrections.tsv), for example:
+
+| Printed | Harsha | Now | Ground |
+|---|---|---|---|
+| कृषिगौरक्ष्य… (18.44) | गोरक्ष्यम् | गौरक्ष्यम् | a taddhita of गोरक्ष; the printed word is right |
+| हृदयेशयम् | हृदय-शयम् | हृदये-शयम् | aluk-samāsa, 6.3.18 शयवासवासिष्वकालात् |
+| पश्यन्नैव | पश्यन् एव | पश्यन् न एव | न + एव → नैव (6.1.88); the न was lost |
+| पुत्रनामासि | पुत्रः नाम असि | पुत्र-नामा असि | ‘आत्मा वै पुत्रनामासि’ |
+| अस्यादीनि (2.23 bh.) | अस्ति-आदीनि | असि-आदीनि | शस्त्राणि असि-आदीनि: असि ‘sword’ |
+| तीक्ष्णीकृतानि | तीक्ष्ण-ईकृतानि | तीक्ष्णी-कृतानि | च्वि, 5.4.50 |
+| अहोरात्रविदः | अहः-रात्रि-विदः | अहः-रात्र-विदः | samāsānta, 5.4.87 |
+| मदनुशासनाकरणमेव | मत्-अनुशासन-अकरण एव | मद्-अनुशासन-अकरणम् एव | ending lost; अकरण (नञ्), not आकरण |
+
+After both passes, every split on the site joins back into the printed word by the sandhi rules, except where a printed
+misprint has been corrected in the pada (Harsha's 145 emendations and one of mine, हेतुत्त्व → हेतुत्व).
 
 ## Reproduce
 

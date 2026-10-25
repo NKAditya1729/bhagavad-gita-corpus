@@ -99,8 +99,6 @@ def join(a, b, internal=False):
         elif y in "Szs":
             res.add((pre + "H" + b, "8.2.66 8.3.15 8.3.36"))
             res.add((pre + y + b, "8.2.66 8.3.34 8.3.36"))
-            if y == "s":
-                res.add((pre + b[1:] if False else pre + "s" + b, "8.3.34"))
         elif v == "a" and (len(pre) < 2 or pre[-2] != "a" or True):
             if pre in ("sa", "eza") and y not in VOWELS:
                 res.add((pre + b, "6.1.132"))
@@ -145,14 +143,13 @@ def join(a, b, internal=False):
         if y in "wW":
             return {(pre + "Mz" + b, "8.3.7 8.3.34 8.4.41")}
         if y == "S":
-            return {(pre + "YS" + b[1:] if False else pre + "Y" + b, "8.4.40"),
-                    (pre + "YC" + b[1:], "8.4.40 8.4.63"), (a + b, "")}
+            return {(pre + "Y" + b, "8.4.40"), (pre + "YC" + b[1:], "8.4.40 8.4.63"), (a + b, "")}
         if y in "jJ":
             return {(pre + "Y" + b, "8.4.40")}
         if y in "qQ":
             return {(pre + "R" + b, "8.4.41")}
-        if y == "l":
-            return {(pre + "Ml" + b[1:] if False else pre + "~l" + b, "8.4.60"), (a + b, "")}
+        if y == "l":  # न् + ल् → ँल्ल् / ंल्ल् (8.4.60 तोर्लि, with the nasal kept as anunāsika or anusvāra)
+            return {(pre + "~l" + b, "8.4.60"), (pre + "Ml" + b, "8.4.60"), (a + b, "")}
         return {(a + b, "")}
     # ---- stops (jhal) ----
     if x in JAS:

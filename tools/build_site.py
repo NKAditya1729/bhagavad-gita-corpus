@@ -130,10 +130,31 @@ def chapter(n, pada):
 
 
 REVIEW = ROOT / "build/review.json"
+REVIEW_H = ROOT / "build/review-harsha.json"
+FALLBACK_H = ROOT / "build/harsha-model-fallback.json"
+CORRECTIONS_H = ROOT / "review/harsha-corrections.tsv"
+
+
+def harsha_decisions():
+    """Harsha's own pairs after tools/review_harsha.py: {word\tpada: new pada or None (show as printed)}."""
+    out = {}
+    if REVIEW_H.exists():
+        fallback = json.loads(FALLBACK_H.read_text(encoding="utf-8")) if FALLBACK_H.exists() else {}
+        for key, (verdict, new, _) in json.loads(REVIEW_H.read_text(encoding="utf-8")).items():
+            if verdict == "emended":
+                continue  # Harsha's corrected reading of a misprint is kept
+            if verdict == "model":
+                new = (fallback.get(key.split("\t")[0]) or [None])[0]
+            out[key] = new
+    if CORRECTIONS_H.exists():
+        for line in CORRECTIONS_H.read_text(encoding="utf-8").splitlines()[1:]:
+            word, old, new, _ = line.split("\t")
+            out[word + "\t" + old] = new
+    return out
 NAMES = ROOT / "build/review-names.json"
 
 
-def apply_review(data, comm, review, names):
+def apply_review(data, comm, review, names, harsha):
     """Apply tools/review.py: a machine pada that passed stays, a repaired one is replaced, a withdrawn one goes;
     a proper name in Harsha's padapāṭha or the mūla is joined back into one word."""
     def fix(paras):
@@ -149,6 +170,11 @@ def apply_review(data, comm, review, names):
                             run[i] = it[0]
                         else:
                             run[i] = [it[0], new, "m"]
+                    elif len(it) == 2 and key in harsha:
+                        new = harsha[key]
+                        if new and new in names["harsha_by_pada"]:
+                            new = names["harsha_by_pada"][new]
+                        run[i] = it[0] if not new or new == it[0] else [it[0], new, "m"]  # changed by the review
                     elif key in names["harsha"]:
                         new = names["harsha"][key]
                         run[i] = it[0] if new is None else [it[0], new]
@@ -174,13 +200,15 @@ def main():
     pada = Pada()
     review = json.loads(REVIEW.read_text(encoding="utf-8")) if REVIEW.exists() else {}
     names = json.loads(NAMES.read_text(encoding="utf-8")) if NAMES.exists() else {"harsha": {}, "mula": {}}
+    names["harsha_by_pada"] = {}
+    harsha = harsha_decisions()
     print("model readings:", dict(pada.how))
     OUT.mkdir(parents=True, exist_ok=True)
     index = []
     for n in range(1, 19):
         data, comm = chapter(n, pada)
         if review:
-            apply_review(data, comm, review, names)
+            apply_review(data, comm, review, names, harsha)
         (OUT / f"ch-{n:02d}.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         for side, c in comm.items():
             (OUT / f"ch-{n:02d}-{side}.json").write_text(json.dumps(c, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

@@ -30,7 +30,7 @@ punaH punar aTa Kalu nu nanu saha vinA prati anyatra sadA sarvadA kadAcit kadAca
 uta vE ha sma tAvat yAvat prAk paScAt antaH antar bahiH sAkzAt svayam sakft asakft muhuH SanEH sahasA atIva ativa
 kevalam param punaHpunaH sarvaTA anyaTA ekadA tarhi yarhi idAnIm adya Svas hyaH ciram nityam nUnam KalU hanta aho
 BoH re are kva sarvatra ubhayaTA mA mA_sma naiva no nEva ca_eva tat yat etat idam adaH sa saH yaH kaH ayam iyam esaH ezaH""".split())
-FRAGMENTS = {"taH", "ti", "ta", "tAH", "yA", "ya", "ra", "ma", "Ta", "Da", "Sa", "za", "ha", "ka", "ga", "ja", "va", "pa"}
+FRAGMENTS = {"taH", "ti", "ta", "ya", "ra", "ma", "Ta", "Da", "Sa", "za", "ka", "ga", "va", "pa"}  # not ताः या ह ज
 NAMES_DEVA = """
 वासुदेव नारायण जनार्दन मधुसूदन केशव हृषीकेश गोविन्द माधव अच्युत वार्ष्णेय यादव अरिसूदन केशिनिषूदन जगन्निवास
 विष्णु कृष्ण मुकुन्द दामोदर पद्मनाभ देवकीनन्दन गोपाल धनञ्जय गुडाकेश कौन्तेय पार्थ परन्तप सव्यसाचिन् किरीटिन्
